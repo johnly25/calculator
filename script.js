@@ -26,19 +26,11 @@ function operate(operator, number1, number2) {
     }
 }
 
-let buttons = document.querySelectorAll('button');
-let display = document.querySelector('.display');
-let num1 = "";
-let num2 = "";
-let operator = "";
-let solution = "";
-const operators = ['+', '-', '*', '/'];
-
 function storeNumber(e, num) {
     console.log(e.target.textContent);
-    if (e.target.textContent === '.' && !num.includes('.')) {
+    if (e.target.textContent == '.' && !num.includes('.')) {
         if (num == "") {
-            num += '0';
+            return '0' + e.target.textContent;
         }
         return e.target.textContent;
     } else if (!e.target.textContent.includes('.')) {
@@ -54,9 +46,21 @@ function isNumberOrPeriod(e) {
     return false;
 }
 
+let buttons = document.querySelectorAll('button');
+let display = document.querySelector('.display');
+let num1 = "";
+let num2 = "";
+let operator = "";
+let solution = "";
+const operators = ['+', '-', '*', '/'];
+
 buttons.forEach(function (button) {
     button.addEventListener('click', function (e) {
-        if (isNumberOrPeriod(e) && operator == "") {
+        if (isNumberOrPeriod(e) && operator == "" && solution == "") {
+            num1 += storeNumber(e, num1);
+            display.textContent = num1;
+        } else if (isNumberOrPeriod(e) && operator == "" && solution != ""){
+            num1 = "";
             num1 += storeNumber(e, num1);
             display.textContent = num1;
         } else if (e.target.textContent == 'clear') {
@@ -76,6 +80,7 @@ buttons.forEach(function (button) {
             num1 = solution;
             num2 = "";
             display.textContent = solution;
+            solution == "";
         } else if (num1 != '' && num2 != '' && operator != '') {
             solution = operate(operator, Number(num1), Number(num2));
             num1 = solution;
@@ -83,6 +88,5 @@ buttons.forEach(function (button) {
             operator = e.target.textContent;
             display.textContent = solution;
         }
-
     });
 });
