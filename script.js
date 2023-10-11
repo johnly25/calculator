@@ -15,38 +15,14 @@ function divide(number1, number2) {
 }
 
 function operate(operator, number1, number2) {
-    console.log('this is where i would operate');
     if (operator == '+') {
-        solution = add(number1, number2)
-    } else if (operator == '-') {
-        solution = subtract(number1, number2);
-    } else if (operator == '*') {
-        solution = multiply(number1, number2);
+        return add(number1, number2);
+    } if (operator == '-') {
+        return subtract(number1, number2);
+    } if (operator == '*') {
+        return multiply(number1, number2);
     } else {
-        solution = divide(number1, number2);
-    }
-
-}
-
-function updateDisplay() {
-    display.textContent = solution;
-}
-function storeNumber(e) {
-    if (operator == "") {
-        if (e.target.textContent == '.' && num1 == "") {
-            num1 += '0' + '.';
-        } else {
-            num1 += e.target.textContent;
-        }
-        display.textContent = num1;
-
-    } else {
-        if (e.target.textContent == '.' && num2 == "") {
-            num2 += '0' + '.';
-        } else {
-            num2 += e.target.textContent;
-        }
-        display.textContent = num2;
+        return divide(number1, number2);
     }
 }
 
@@ -58,25 +34,55 @@ let operator = "";
 let solution = "";
 const operators = ['+', '-', '*', '/'];
 
+function storeNumber(e, num) {
+    console.log(e.target.textContent);
+    if (e.target.textContent === '.' && !num.includes('.')) {
+        if (num == "") {
+            num += '0';
+        }
+        return e.target.textContent;
+    } else if (!e.target.textContent.includes('.')) {
+        return e.target.textContent;
+    }
+    return '';
+}
+
+function isNumberOrPeriod(e) {
+    if (!isNaN(e.target.textContent) || e.target.textContent == '.') {
+        return true;
+    }
+    return false;
+}
 
 buttons.forEach(function (button) {
     button.addEventListener('click', function (e) {
-        console.log(e.target.textContent);
-        if (!isNaN(e.target.textContent) || e.target.textContent == '.') {
-            storeNumber(e);
+        if (isNumberOrPeriod(e) && operator == "") {
+            num1 += storeNumber(e, num1);
+            display.textContent = num1;
         } else if (e.target.textContent == 'clear') {
-            display.textContent = "0";
             num1 = "";
             num2 = "";
             operator = "";
             solution = "";
-        } else if (operators.includes(e.target.textContent)) {
+            display.textContent = '0';
+        } else if (operators.includes(e.target.textContent) && num1 != '' && num2 == '') {
             operator = e.target.textContent;
+        } else if (operator != "" && isNumberOrPeriod(e)) {
+            num2 += storeNumber(e, num2);
+            display.textContent = num2;
+        } else if (e.target.textContent == '=' && num2 != '') {
+            solution = operate(operator, Number(num1), Number(num2));
+            operator = "";
+            num1 = solution;
+            num2 = "";
+            display.textContent = solution;
+        } else if (num1 != '' && num2 != '' && operator != '') {
+            solution = operate(operator, Number(num1), Number(num2));
+            num1 = solution;
+            num2 = '';
             operator = e.target.textContent;
-        } else if (e.target.textContent == '=') {
-            operate(operator, Number(num1), Number(num2));
-            updateDisplay();
-
+            display.textContent = solution;
         }
+
     });
 });
