@@ -19,7 +19,7 @@ function operate(operator, number1, number2) {
         return add(number1, number2);
     } if (operator == '-') {
         return subtract(number1, number2);
-    } if (operator == '*') {
+    } if (operator == 'x') {
         return multiply(number1, number2);
     } else {
         return divide(number1, number2);
@@ -33,6 +33,12 @@ function storeNumber(e, num) {
             return '0' + e.target.textContent;
         }
         return e.target.textContent;
+    } else if (e.target.textContent == '0') {
+        if(num == '0') {
+            return '';
+        } else {
+            return e.target.textContent;
+        }
     } else if (!e.target.textContent.includes('.')) {
         return e.target.textContent;
     }
@@ -52,18 +58,18 @@ let num1 = "";
 let num2 = "";
 let operator = "";
 let solution = "";
-const operators = ['+', '-', '*', '/'];
+const operators = ['+', '-', 'x', '/'];
 
 buttons.forEach(function (button) {
     button.addEventListener('click', function (e) {
         if (isNumberOrPeriod(e) && operator == "" && solution == "") {
             num1 += storeNumber(e, num1);
             display.textContent = num1;
-        } else if (isNumberOrPeriod(e) && operator == "" && solution != ""){
+        } else if (isNumberOrPeriod(e) && operator == "" && solution != "") {
             num1 = "";
             num1 += storeNumber(e, num1);
             display.textContent = num1;
-        } else if (e.target.textContent == 'clear') {
+        } else if (e.target.textContent == 'AC') {
             num1 = "";
             num2 = "";
             operator = "";
